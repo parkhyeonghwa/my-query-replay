@@ -1,0 +1,5 @@
+-- Current Database: `test`
+
+CREATE DATABASE `test`;
+USE `test`;
+CREATE TABLE `t31` ( `c1` bigint(20), `c2` bigint(20), UNIQUE KEY `k1` (`c1`,`c2`) );

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}Replay Queries Edit{% endblock title %}
+
+{% block content %}
+    <h3 class="page-header">Replay Queries Edit</h3>
+    {% if replay_id %}
+    <form action="{% url 'app:replay_mod' meta_id=meta_id replay_id=replay_id %}" method="post" class="form-horizontal" role="form">
+    {% else %}
+    <form action="{% url 'app:replay_add' meta_id=meta_id %}" method="post" class="form-horizontal" role="form">
+    {% endif %}
+      {% csrf_token %}
+      {{ form|bootstrap_horizontal }}
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary">Commit</button>
+        </div>
+      </div>
+    </form>
+    <a href="{% url 'app:replay_list' meta_id=meta_id %}" class="btn btn-default btn-sm">Back</a>
+{% endblock content %}

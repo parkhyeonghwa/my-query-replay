@@ -1,0 +1,1 @@
+SELECT c1 FROM t31 WHERE (c2 = 1 AND c1 = 2) OR (c2 = 10 AND c1 IN (3, 100)) OR (c2 = 2 AND c1 = 1) OR (c2 = 2 AND c1 IN (1, 2, 3)) GROUP BY c1;
