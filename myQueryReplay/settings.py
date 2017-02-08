@@ -71,7 +71,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'myQueryReplay.wsgi.application'
+SGI_APPLICATION = 'myQueryReplay.wsgi.application'
 
 
 # Database

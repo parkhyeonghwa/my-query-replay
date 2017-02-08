@@ -4,7 +4,6 @@ from django.utils import timezone
 
 
 
-
 class Meta(models.Model):
     """Meta"""
 #    meta_id = models.AutoField(primary_key=True)

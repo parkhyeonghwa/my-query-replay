@@ -8,6 +8,7 @@ urlpatterns  =  [
     url(r'^meta/del/(?P<meta_id>\d+)/$', views.meta_del, name='meta_del'),   # delete
  # Query Replay
     url(r'^replay/(?P<meta_id>\d+)/$', views.ReplayList.as_view(), name='replay_list'),
+    url(r'^replay/(?P<meta_id>\d+)/ng/$', views.ReplayList_NG.as_view(), name='replay_ng_list'),
     url(r'^replay/upload/(?P<meta_id>\d+)/$', views.replay_upload, name='replay_upload'),
     url(r'^replay/add/(?P<meta_id>\d+)/$', views.replay_edit, name='replay_add'),
     url(r'^replay/mod/(?P<meta_id>\d+)/(?P<replay_id>\d+)/$', views.replay_edit, name='replay_mod'),

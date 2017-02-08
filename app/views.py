@@ -1,6 +1,8 @@
 from django.http  import  HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
+
 
 from app.models import  Meta, Replay, ReplayFile
 from app.forms import MetaForm, ReplayForm, UploadFileForm
@@ -13,10 +15,6 @@ from django.db import connections
 
 # Create your views here.
 
-
-# Imaginary function to handle an uploaded file.
-
-# Create your views here.
 
 # imported_meta_list 목록보기
 def  meta_list ( request ) :
@@ -186,7 +184,7 @@ class ReplayList(ListView):
     """Replay List"""
     context_object_name='replay_list'
     template_name='app/replay_list.html'
-    paginate_by = 100  # 1페이지당 2건씩 페이징
+    paginate_by = 100  # 1페이지당 100건씩 페이징
 
     def get(self, request, *args, **kwargs):
         meta = get_object_or_404(Meta, pk=kwargs['meta_id'])
@@ -194,19 +192,29 @@ class ReplayList(ListView):
         self.object_list = replay_list
 
         context = self.get_context_data(object_list=self.object_list, meta=meta)
+        # context['filter'] = self.request.GET.get('filter', 'give-default-value')
+        # context['orderby'] = self.request.GET.get('orderby', 'give-default-value')
+
         return self.render_to_response(context)
-# #
-# def replay_upload(request, meta_id):
-#     if request.method == 'POST' and request.FILES['myfile']:
-#     #f = request.FILES['replayfile']
-#         print ("upload")
-#     #     fs = FileSystemStorage()
-#     #     filename = fs.save(myfile.name, myfile)
-#     #     uploaded_file_url = fs.url(filename)
-#     #     return render(request, 'app/replay_upload.html', {
-#     #         'uploaded_file_url': uploaded_file_url
-#     #     })
-#     return render(request, 'app/replay_upload.html', dict(form=form, meta_id=meta_id))
+
+
+
+
+
+class ReplayList_NG(ListView):
+    """Replay NG List"""
+    context_object_name='replay_list'
+    template_name='app/replay_list_ng.html'
+    paginate_by = 100  # 1페이지당 2건씩 페이징
+
+    def get(self, request, *args, **kwargs):
+        meta = get_object_or_404(Meta, pk=kwargs['meta_id'])
+        replay_list_ng = meta.replay_list.all().filter(suceeded_yn=False).order_by('id')
+        self.object_list = replay_list_ng
+
+        context = self.get_context_data(object_list=self.object_list, meta=meta)
+        return self.render_to_response(context)
+
 
 
 def replay_upload(request, meta_id):
@@ -293,7 +301,8 @@ def replay_run(request, meta_id, replay_id):
     tfile = os.path.join(settings.MEDIA_ROOT,'replayfiles',meta.import_dbname,replay_id+'.sql')
     os.makedirs(os.path.dirname(tfile), exist_ok=True)
     tf = open(tfile, 'w')
-    tf.write(replay.sql_text)
+    #tf.write(replay.sql_text)
+    tf= write(replay.sql_text.replace('?', '0'))
     # mysqltest -uroot -p import_dbname -x rfile
     tf.close()
 
@@ -380,7 +389,7 @@ def replay_run_all(request,meta_id):
     print('done')
 
     return redirect('app:replay_list', meta_id=meta_id)
-
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def replay_delete_all(request,meta_id):

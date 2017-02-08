@@ -8,7 +8,7 @@
     <h5> Notice </h5>
     <p> DB Name: original database name which is shown in mysqldump.</p>
     <p> New DB Name: new database name to be imported to test_server.(Please specify the name which is not duplicated.) </p>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
       <div class="form-group">
@@ -17,6 +17,5 @@
         </div>
       </div>
     </form>
-
-    <a href="{% url 'app:meta_list' %}" class="btn btn-default btn-sm">Return to Home</a>
+    <a href="{% url 'app:meta_list' %}" class="btn btn-default btn-sm">Back</a>
 {% endblock content %}
