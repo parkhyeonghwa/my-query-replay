@@ -86,7 +86,7 @@ def  meta_import (request, meta_id) :
                 p = Popen(command, stdout=PIPE, stdin=f, stderr=PIPE)
                 out, err = p.communicate()
 
-                if out:
+                if err:
                     print("out",out)
                     print("err",err)
                 else:
