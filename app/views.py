@@ -173,17 +173,36 @@ def sql_load(meta_id,replayfile_id):
     replayfile = get_object_or_404(ReplayFile, pk=replayfile_id)
     rfile = os.path.join(settings.MEDIA_ROOT,replayfile.replayfile.name)
     nrfile =  os.path.join(settings.MEDIA_ROOT,replayfile.replayfile.name+'_new.sql')
-
     removeComments(rfile,nrfile)
     if os.path.exists(nrfile):
         print ("replay file exists")
-        with open(nrfile) as f:
-            for line in f.read().replace('\G', ';\n').split(';\n'):
-                #print(line)
-                replay = Replay()
-                replay.sql_text=line+';'
-                replay.meta = meta
-                replay.save()
+        if replayfile.filetype == "pt-query-digest" :
+            with open(nrfile) as f:
+                for line in f.read().split('\G'):
+                    #print(line)
+                    replay = Replay()
+                    replay.sql_text=line+';'
+                    replay.meta = meta
+                    replay.save()
+
+        elif replayfile.filetype == "query-analyzer" :
+            with open(nrfile) as f:
+                for line in f.read().split('\n'):
+                    #print(line)
+                    replay = Replay()
+                    replay.sql_text=line+';'
+                    replay.meta = meta
+                    replay.save()
+        else:
+            with open(nrfile) as f:
+                for line in f.read().split(';\n'):
+                    #print(line)
+                    replay = Replay()
+                    replay.sql_text=line+';'
+                    replay.meta = meta
+                    replay.save()
+
+
 
 def replay_edit(request, meta_id, replay_id=None):
   """Replay Query Edit"""
@@ -215,7 +234,7 @@ def replay_run(request, meta_id, replay_id):
     tfile = os.path.join(settings.MEDIA_ROOT,'replayfiles',meta.import_dbname,replay_id+'.sql')
     os.makedirs(os.path.dirname(tfile), exist_ok=True)
     tf = open(tfile, 'w')
-    tf= write(replay.sql_text.replace('?', '0'))
+    tf.write(replay.sql_text.replace('?','0'))
     tf.close()
     #mysqltest
     command = ['mysqltest','-u',database['USER'],'-p%s'%database['PASSWORD'],'-h',database['HOST'],'-P',database['PORT'],meta.import_dbname,'-x',tfile]

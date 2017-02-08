@@ -6,9 +6,13 @@
 {% block content %}
 
     <h3 class="page-header">Upload Replay Query file</h3>
+    <h5> Notice </h5>
+    <p> Please choose the correct filetype. <p>
+    <p> pt-query-digest - output of pg-query-digest (statement delimiter : '\G')</p>
+    <p> query-analyzer - output of query-analyzer (statement delimiter : '\n')</p>
+    <p> sql - General SQLs (statement delimiter : ';')</p>
 
-    <!-- <form action="{% url 'app:replay_upload' meta_id=meta_id %}" method="post" class="form-horizontal" role="form"> -->
-    <form method="post" enctype="multipart/form-data">
+      <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
       <div class="form-group">

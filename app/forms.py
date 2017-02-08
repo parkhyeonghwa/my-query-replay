@@ -19,4 +19,4 @@ class UploadFileForm(ModelForm):
     """Upload Replay Files"""
     class Meta:
         model = ReplayFile
-        fields = ('description', 'replayfile', )
+        fields = ('description', 'filetype', 'replayfile', )

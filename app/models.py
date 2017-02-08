@@ -27,10 +27,19 @@ class Replay(models.Model):
     def __str__(self):
         return self.sql_text
 
+
+ReplayFile_Types = (
+    ('pt-query-digest','pt-query-digest'), # split with \G
+    ('query-analyzer', 'query-analyzer'), # split with new line
+    ('sql','sql') #split with ;\n
+)
+
+
 class ReplayFile(models.Model):
     """Replay Query File"""
     meta = models.ForeignKey(Meta, verbose_name='meta', related_name='file_list')
     description = models.CharField(max_length=255, blank=True)
+    filetype=models.CharField(max_length=30, choices=ReplayFile_Types, default='')
     replayfile = models.FileField('Replay File', upload_to='replayfiles/', default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
