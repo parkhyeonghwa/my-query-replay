@@ -13,6 +13,10 @@ urlpatterns  =  [
     url(r'^replay/mod/(?P<meta_id>\d+)/(?P<replay_id>\d+)/$', views.replay_edit, name='replay_mod'),
     url(r'^replay/run/(?P<meta_id>\d+)/(?P<replay_id>\d+)/$', views.replay_run, name='replay_run'),
     url(r'^replay/replay_run_all/(?P<meta_id>\d+)/$', views.replay_run_all, name='replay_run_all'),
+    url(r'^replay/replay_delete_all/(?P<meta_id>\d+)/$', views.replay_delete_all, name='replay_delete_all'),
+
+#    url(r'^replay/replay_run_all/$', views.replay_run_all, name='replay_run_all'),
+
     url(r'^replay/del/(?P<meta_id>\d+)/(?P<replay_id>\d+)/$', views.replay_del, name='replay_del'),
 
 ]

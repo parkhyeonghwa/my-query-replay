@@ -32,7 +32,7 @@ $(function() {
   });
 
   $('.deleteall').on("click", function(event){
-  	var tb = $(this).attr('title');
+  	var tb = $(this).attr('table');
   	var sel = false;
   	var ch = $('#'+tb).find('tbody input[type=checkbox]');
   	var c = confirm('Continue delete?');
@@ -54,25 +54,71 @@ $(function() {
 
 
 
+
   $("#process_button").click(function () {
       //create an array of checked checkbox ids
       var meta_id= $(this).attr('meta_id');
+
       var ids = $('.checkbox:checked').map(function (index) {
           return this.id;
       }).get();
-
+      //alert(ids)
       //if nothing is selected alert the user and stop further processing
       if (!ids.length) {
           alert('nothing is selected')
           return;
       }
-
       //send a request to server using an ajax POST request, it will contains an array of parameters called ids
       $.ajax({
-          url: '/app/replay/replay_run_all/'+meta_id+'/',
           type: 'POST',
+          beforeSend: function (request)
+          {
+              request.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          //url: '/app/replay/replay_run_all/'+meta_id+'/',
+          url: '{% url "app:replay_run_all" meta_id=meta.id%}',
+          //url: '/app/replay/replay_run_all/'
           data: {
-              ids: ids
+              ids: ids,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response){
+              // alert('ok')
+              window.location =  '{% url "app:replay_list" meta_id=meta.id%}';
+          }
+      })
+  });
+
+  $("#delete_button").click(function () {
+      //create an array of checked checkbox ids
+      var meta_id= $(this).attr('meta_id');
+
+      var ids = $('.checkbox:checked').map(function (index) {
+          return this.id;
+      }).get();
+      //alert(ids)
+      //if nothing is selected alert the user and stop further processing
+      if (!ids.length) {
+          alert('nothing is selected')
+          return;
+      }
+      //send a request to server using an ajax POST request, it will contains an array of parameters called ids
+      $.ajax({
+          type: 'POST',
+          beforeSend: function (request)
+          {
+              request.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
+          },
+          //url: '/app/replay/replay_run_all/'+meta_id+'/',
+          url: '{% url "app:replay_delete_all" meta_id=meta.id%}',
+          //url: '/app/replay/replay_run_all/'
+          data: {
+              ids: ids,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response){
+              // alert('ok')
+              window.location =  '{% url "app:replay_list" meta_id=meta.id%}';
           }
       })
   });
@@ -111,7 +157,7 @@ table {
 
         <tr>
 
-          <td><input type="checkbox" name="run_all_list" values="{{ replay.id }}" class="checkbox"></td>
+          <td><input type="checkbox" name="run_all_list" id="{{ replay.id }}" class="checkbox"></td>
           <td>{{ replay.id }}</td>
           <td>{{ replay.sql_text|linebreaksbr }}</td>
           <td>{{ replay.tested_yn|yesno:"Done,Not yet" }}</td>
@@ -153,7 +199,9 @@ table {
     {% endif %}
 
     <div>
+
       <button class="btn btn-default btn-sm del_confirm" id="process_button" meta_id="{{ meta.id }}">Process</button>
+      <button class="btn btn-default btn-sm del_confirm" id="delete_button" meta_id="{{ meta.id }}">Delete</button>
 
       {# <input id="process_button" name="" type="button" class="btn btn-default btn-sm"  value="Process">#}
       <a href="{% url 'app:meta_list' %}" class="btn btn-default btn-sm">Back to Meta List</a>

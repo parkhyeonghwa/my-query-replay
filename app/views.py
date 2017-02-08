@@ -364,25 +364,39 @@ def replay_del(request, meta_id, replay_id):
 
 
 def replay_run_all(request,meta_id):
-
-    meta_id= request.GET.get('meta_id', None)
-
-    # meta = get_object_or_404(Meta, pk=meta_id)
-    print(meta_id)
-    list_of_ids = request.POST.getlist('run_all_list')
-    print (list_of_ids)
+    #meta_id= request.GET.get('meta_id', None)
+    #print(meta_id)
+    meta = get_object_or_404(Meta, pk=meta_id)
+    #print(meta_id)
+    #list_of_ids = request.POST.getlist('run_all_list')
+    #print (list_of_ids)
     if request.method == "POST":
-        print("POST")
-        list_of_ids = request.POST.getlist('run_all_list')
+        list_of_ids = request.POST.getlist('ids[]')
         print (list_of_ids)
-        replay = ObjectClass.replay.filter(id__in=list_of_ids)
+        #replay = Replay.objects.filter(id__in=list_of_ids)
+        for id in list_of_ids:
+            #print(id)
+            replay_run('POST',meta_id, id)
+    print('done')
+
     return redirect('app:replay_list', meta_id=meta_id)
 
-def validate_username(request):
-    username = request.GET.get('username', None)
-    data = {
-        'is_taken': User.objects.filter(username__iexact=username).exists()
-    }
-    if data['is_taken']:
-        data['error_message'] = 'A user with this username already exists.'
-    return JsonResponse(data)
+
+
+def replay_delete_all(request,meta_id):
+    #meta_id= request.GET.get('meta_id', None)
+    #print(meta_id)
+    meta = get_object_or_404(Meta, pk=meta_id)
+    #print(meta_id)
+    #list_of_ids = request.POST.getlist('run_all_list')
+    #print (list_of_ids)
+    if request.method == "POST":
+        list_of_ids = request.POST.getlist('ids[]')
+        print (list_of_ids)
+        #replay = Replay.objects.filter(id__in=list_of_ids)
+        for id in list_of_ids:
+            #print(id)
+            replay_del('POST',meta_id, id)
+    print('done')
+
+    return redirect('app:replay_list', meta_id=meta_id)
