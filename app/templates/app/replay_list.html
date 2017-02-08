@@ -53,9 +53,7 @@ $(function() {
           {
               request.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
-          //url: '/app/replay/replay_run_all/'+meta_id+'/',
           url: '{% url "app:replay_run_all" meta_id=meta.id%}',
-          //url: '/app/replay/replay_run_all/'
           data: {
               ids: ids,
               csrfmiddlewaretoken: '{{ csrf_token }}'
@@ -87,9 +85,7 @@ $(function() {
           {
               request.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
-          //url: '/app/replay/replay_run_all/'+meta_id+'/',
           url: '{% url "app:replay_delete_all" meta_id=meta.id%}',
-          //url: '/app/replay/replay_run_all/'
           data: {
               ids: ids,
               csrfmiddlewaretoken: '{{ csrf_token }}'
@@ -117,7 +113,6 @@ table {
     <h3 class="page-header">Replay Queries List <small>{{ meta.import_dbname }}</small></h3>
     <a href="{% url 'app:replay_add' meta_id=meta.id %}" class="btn btn-default btn-sm">Add</a>
     <a href="{% url 'app:replay_upload' meta_id=meta.id%}" class="btn btn-default btn-sm">Upload</a>
-    {# <a href="{% url 'app:replay_run_all' meta_id=meta.id %}" class="btn btn-default btn-sm" method="POST">Run All</a>#}
     <a href="{% url 'app:replay_list' meta_id=meta.id %}" class="btn btn-default btn-sm">Show ALL</a>
     <a href="{% url 'app:replay_ng_list' meta_id=meta.id %}" class="btn btn-default btn-sm">Show NG</a>
     <table class="table table-striped table-bordered">
@@ -180,9 +175,6 @@ table {
     <div>
       <button class="btn btn-default btn-sm del_confirm" id="process_button" meta_id="{{ meta.id }}">Process</button>
       <button class="btn btn-default btn-sm del_confirm" id="delete_button" meta_id="{{ meta.id }}">Delete</button>
-
-      {# <input id="process_button" name="" type="button" class="btn btn-default btn-sm"  value="Process">#}
-
       <a href="{% url 'app:meta_list' %}" class="btn btn-default btn-sm" >Back to Meta List</a>
 
     </div>

@@ -45,7 +45,6 @@ table {
           <td>{{ meta.created_at }}</td>
           <td>{{ meta.imported_yn|yesno:"Done,Not yet" }}</td>
           <td>
-            {# <a href="{% url 'app:meta_extract' meta_id=meta.id %}" class="btn btn-default btn-sm">Extract</a>#}
             <a href="{% url 'app:meta_import' meta_id=meta.id %}" class="btn btn-default btn-sm">Import</a>
             <button class="btn btn-default btn-sm del_confirm" data-toggle="modal" data-target="#deleteModal" pk="{{ meta.id }}" url="{% url 'app:meta_del' meta_id=meta.id %}">Delete</button>
             <a href="{% url 'app:replay_list' meta_id=meta.id %}" class="btn btn-default btn-sm btn-primary">Query Replay</a>
