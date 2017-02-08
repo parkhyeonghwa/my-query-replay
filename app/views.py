@@ -241,8 +241,6 @@ def replay_run(request, meta_id, replay_id):
     try:
         p = Popen(command, stdout=PIPE, stderr=PIPE)
         out, err = p.communicate()
-        print("out",out)
-        print("err",err)
         if err:
             replay.logs=out+err
             replay.tested_yn=1
