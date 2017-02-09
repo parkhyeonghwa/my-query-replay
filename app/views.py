@@ -159,10 +159,9 @@ def removeComments(inputFileName, outputFileName):
     inf = open(inputFileName, "r")
     outf = open(outputFileName, "w")
 
-    outf.write(inf.readline())
-
+#    outf.write(inf.readline())
     for line in inf:
-        if  not line.lstrip().startswith("#") and not line.lstrip().startswith("SET") and not line.lstrip().startswith("administrator command") and not line.lstrip().startswith("SELECT @") :
+        if  not line.lstrip().startswith("#") and not line.lstrip().startswith("SET") and not line.lstrip().startswith("administrator command") and not line.lstrip().startswith("SELECT @"):
             outf.write(line)
 
     inf.close()
