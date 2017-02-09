@@ -234,7 +234,7 @@ def replay_run(request, meta_id, replay_id):
     tfile = os.path.join(settings.MEDIA_ROOT,'replayfiles',meta.import_dbname,replay_id+'.sql')
     os.makedirs(os.path.dirname(tfile), exist_ok=True)
     tf = open(tfile, 'w')
-    rep = {'?' : '0', 'COUNT (' : 'COUNT(', 'MAX (' : 'MAX (', 'MIN (' : 'MIN(','CONCAT (' : 'CONCAT(', 'SUM (' : 'SUM(', 'NOW (':'NOW('}
+    rep = {'?' : '0', 'COUNT (' : 'COUNT(', 'MAX (' : 'MAX (', 'MIN (' : 'MIN(','CONCAT (' : 'CONCAT(', 'SUM (' : 'SUM(', 'NOW (':'NOW(', 'CAST (':'CAST('}
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
     sqlline = pattern.sub(lambda m: rep[re.escape(m.group(0))], replay.sql_text)
