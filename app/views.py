@@ -161,13 +161,8 @@ def removeComments(inputFileName, outputFileName):
 
     outf.write(inf.readline())
 
-
-    replace_func_with_ws = {'COUNT (' : 'COUNT(', 'MAX (' : 'MAX (', 'MIN (' : 'MIN(','CONCAT (' : 'CONCAT(', 'SUM (' : 'SUM('}
     for line in inf:
         if  not line.lstrip().startswith("#") and not line.lstrip().startswith("SET") and not line.lstrip().startswith("administrator command") and not line.lstrip().startswith("SELECT @") and len(line.strip())>0 :
-            for x,y in line:
-                resultline = line.replace(x, y)
-
             outf.write(resultline)
 
     inf.close()
