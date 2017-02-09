@@ -21,7 +21,7 @@ class Replay(models.Model):
     meta = models.ForeignKey(Meta, verbose_name='meta', related_name='replay_list')
     sql_text = models.TextField('SQL TEXT', blank=True)
     tested_yn = models.BooleanField(default=False)
-    suceeded_yn = models.BooleanField(default=False)
+    succeeded_yn = models.BooleanField(default=False)
     logs = models.TextField('LOGS', blank=True)
 
     def __str__(self):

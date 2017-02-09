@@ -115,6 +115,7 @@ table {
     <a href="{% url 'app:replay_upload' meta_id=meta.id%}" class="btn btn-default btn-sm">Upload</a>
     <a href="{% url 'app:replay_list' meta_id=meta.id %}" class="btn btn-default btn-sm">Show ALL</a>
     <a href="{% url 'app:replay_ng_list' meta_id=meta.id %}" class="btn btn-default btn-sm">Show NG</a>
+    Rows : {{ replay_list.count }}
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -135,7 +136,7 @@ table {
           <td>{{ replay.id }}</td>
           <td>{{ replay.sql_text|linebreaksbr }}</td>
           <td>{{ replay.tested_yn|yesno:"Done,Not yet" }}</td>
-          <td>{{ replay.suceeded_yn|yesno:"OK,NG" }}</td>
+          <td>{{ replay.succeeded_yn|yesno:"OK,NG" }}</td>
           <td>{{ replay.logs|linebreaksbr }}</td>
           <td>
             <a href="{% url 'app:replay_mod' meta_id=meta.id replay_id=replay.id %}" class="btn btn-default btn-sm">Edit</a>
@@ -173,8 +174,11 @@ table {
     {% endif %}
 
     <div>
-      <button class="btn btn-default btn-sm del_confirm" id="process_button" meta_id="{{ meta.id }}">Process</button>
-      <button class="btn btn-default btn-sm del_confirm" id="delete_button" meta_id="{{ meta.id }}">Delete</button>
+      <div>
+        <button class="btn btn-default btn-sm del_confirm" id="process_button" meta_id="{{ meta.id }}">Process</button>
+        <button class="btn btn-default btn-sm del_confirm" id="delete_button" meta_id="{{ meta.id }}">Delete</button>
+        <p>
+      </div>
       <a href="{% url 'app:meta_list' %}" class="btn btn-default btn-sm" >Back to Meta List</a>
 
     </div>

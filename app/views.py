@@ -128,7 +128,7 @@ class ReplayList_NG(ListView):
     paginate_by = 100
     def get(self, request, *args, **kwargs):
         meta = get_object_or_404(Meta, pk=kwargs['meta_id'])
-        replay_list_ng = meta.replay_list.all().filter(suceeded_yn=False).order_by('id')
+        replay_list_ng = meta.replay_list.all().filter(succeeded_yn=False).order_by('id')
         self.object_list = replay_list_ng
         context = self.get_context_data(object_list=self.object_list, meta=meta)
         return self.render_to_response(context)
@@ -155,14 +155,20 @@ def replay_upload(request, meta_id):
 
 
 def removeComments(inputFileName, outputFileName):
+    # Remove Comments and SET commands, Remove a whitespace in aggregate function.
     inf = open(inputFileName, "r")
     outf = open(outputFileName, "w")
 
     outf.write(inf.readline())
 
+
+    replace_func_with_ws = {'COUNT (' : 'COUNT(', 'MAX (' : 'MAX (', 'MIN (' : 'MIN(','CONCAT (' : 'CONCAT(', 'SUM (' : 'SUM('}
     for line in inf:
-        if  not line.lstrip().startswith("#") and not line.lstrip().startswith("SET") and not line.lstrip().startswith("administrator command") and not line.lstrip().startswith("SELECT @") :
-            outf.write(line)
+        if  not line.lstrip().startswith("#") and not line.lstrip().startswith("SET") and not line.lstrip().startswith("administrator command") and not line.lstrip().startswith("SELECT @") and len(line.strip())>0 :
+            for x,y in line:
+                resultline = line.replace(x, y)
+
+            outf.write(resultline)
 
     inf.close()
     outf.close()
@@ -234,7 +240,14 @@ def replay_run(request, meta_id, replay_id):
     tfile = os.path.join(settings.MEDIA_ROOT,'replayfiles',meta.import_dbname,replay_id+'.sql')
     os.makedirs(os.path.dirname(tfile), exist_ok=True)
     tf = open(tfile, 'w')
-    tf.write(replay.sql_text.replace('?','0'))
+    rep = {'?' : '0', 'COUNT (' : 'COUNT(', 'MAX (' : 'MAX (', 'MIN (' : 'MIN(','CONCAT (' : 'CONCAT(', 'SUM (' : 'SUM('}
+    rep = dict((re.escape(k), v) for k, v in rep.items())
+    pattern = re.compile("|".join(rep.keys()))
+    sqlline = pattern.sub(lambda m: rep[re.escape(m.group(0))], replay.sql_text)
+    print(sqlline)
+    tf.write(sqlline)
+
+    #tf.write(replay.sql_text.replace('?','0'))
     tf.close()
     #mysqltest
     command = ['mysqltest','-u',database['USER'],'-p%s'%database['PASSWORD'],'-h',database['HOST'],'-P',database['PORT'],meta.import_dbname,'-x',tfile]
@@ -244,12 +257,12 @@ def replay_run(request, meta_id, replay_id):
         if err:
             replay.logs=out+err
             replay.tested_yn=1
-            replay.suceeded_yn=0
+            replay.succeeded_yn=0
             replay.save()
         else:
             replay.logs=out
             replay.tested_yn=1
-            replay.suceeded_yn=1
+            replay.succeeded_yn=1
             replay.save()
     except OSError as e:
         print ("OSError > ",e.errno)
